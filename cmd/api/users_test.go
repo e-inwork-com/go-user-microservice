@@ -63,6 +63,7 @@ func TestRegisterUserHandler(t *testing.T) {
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
+	assert.Nil(t, err)
 
 	var result map[string]data.User
 	err = json.Unmarshal(body, &result)
