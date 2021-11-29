@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUserHandler(t *testing.T) {
+func TestRoutes(t *testing.T) {
 	// Server Setup
 	tsDB, err := testserver.NewTestServer()
 	assert.Nil(t, err)
