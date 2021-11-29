@@ -1,2 +1,2 @@
 # e-inwork.com 
-# Example: Golang User Microservice
+# Golang User Microservice
