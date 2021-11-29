@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  user:
+    depends_on:
+      - db
+    build:
+      context: .
+    hostname: userhost
+    networks:
+      - servicenet
+    ports:
+      - "4000:4000"
+    security_opt:
+      - "seccomp:unconfined"
+    environment:
+      - DBDSN=${DBDSN:-postgres://root@dbhost:26257/einwork?sslmode=disable}
+    deploy:
+      restart_policy:
+        condition: on-failure
+  db:
+    image: cockroachdb/cockroach:latest-v20.1
+    hostname: dbhost
+    networks:
+      - servicenet
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    volumes:
+      - dbdata:/cockroach/cockroach-data
+    command: start-single-node --insecure
+
+volumes:
+  dbdata:
+
+networks:
+  servicenet:
+    driver: bridge
