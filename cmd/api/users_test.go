@@ -15,7 +15,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRegisterUserHandler(t *testing.T) {
+func TestUserHandler(t *testing.T) {
+	// Server Setup
 	tsDB, err := testserver.NewTestServer()
 	assert.Nil(t, err)
 	urlDB := tsDB.PGURL()
@@ -56,6 +57,7 @@ func TestRegisterUserHandler(t *testing.T) {
 	ts := httptest.NewTLSServer(app.routes())
 	defer ts.Close()
 
+	// Register
 	user := `{"name": "Test", "email": "test@example.com", "password": "pa55word"}`
 	res, err := ts.Client().Post(ts.URL+"/api/users", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
@@ -65,8 +67,26 @@ func TestRegisterUserHandler(t *testing.T) {
 	body, err := ioutil.ReadAll(res.Body)
 	assert.Nil(t, err)
 
-	var result map[string]data.User
-	err = json.Unmarshal(body, &result)
+	var userResult map[string]data.User
+	err = json.Unmarshal(body, &userResult)
 	assert.Nil(t, err)
-	assert.Equal(t, result["user"].Email, "test@example.com")
+	assert.Equal(t, userResult["user"].Email, "test@example.com")
+
+	// User Token Authentication Sign In
+	user = `{"email": "test@example.com", "password": "pa55word"}`
+	res, err = ts.Client().Post(ts.URL+"/api/authentication", "application/json", bytes.NewReader([]byte(user)))
+	assert.Nil(t, err)
+	assert.Equal(t, res.StatusCode, http.StatusCreated)
+
+	defer res.Body.Close()
+	body, err = ioutil.ReadAll(res.Body)
+	assert.Nil(t, err)
+
+	type authType struct{
+		Token string `json:"token"`
+	}
+	var authResult authType
+	err = json.Unmarshal(body, &authResult)
+	assert.Nil(t, err)
+	assert.NotNil(t, authResult.Token)
 }
