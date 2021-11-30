@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"errors"
@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"user.services.e-inwork.com/internal/data"
-	"user.services.e-inwork.com/internal/validator"
+	"github.com/e-inwork-com/golang-user-microservice/internal/data"
+	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
 
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -17,7 +17,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
+func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -39,7 +39,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	user, err := app.models.Users.GetByEmail(input.Email)
+	user, err := app.Models.Users.GetByEmail(input.Email)
 	if err != nil {
 		switch {
 		case errors.Is(err, data.ErrRecordNotFound):
@@ -61,7 +61,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		return
 	}
 
-	signingKey := []byte(app.config.auth.secret)
+	signingKey := []byte(app.Config.Auth.Secret)
 	expirationTime := time.Now().Add((24 * 7) * time.Hour)
 	claims := &Claims{
 		ID: user.ID,

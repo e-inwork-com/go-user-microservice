@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"bytes"
@@ -8,8 +8,9 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
-	"user.services.e-inwork.com/internal/data"
-	"user.services.e-inwork.com/internal/jsonlog"
+
+	"github.com/e-inwork-com/golang-user-microservice/internal/data"
+	"github.com/e-inwork-com/golang-user-microservice/internal/jsonlog"
 
 	"github.com/cockroachdb/cockroach-go/v2/testserver"
 	"github.com/stretchr/testify/assert"
@@ -21,19 +22,19 @@ func TestRoutes(t *testing.T) {
 	assert.Nil(t, err)
 	urlDB := tsDB.PGURL()
 
-	var cfg config
-	cfg.db.dsn = urlDB.String()
-	cfg.auth.secret = "secret"
-	cfg.db.maxOpenConn = 25
-	cfg.db.maxIdleConn = 25
-	cfg.db.maxIdleTime = "15m"
-	cfg.limiter.enabled = true
-	cfg.limiter.rps = 2
-	cfg.limiter.burst = 4
+	var cfg Config
+	cfg.Db.Dsn = urlDB.String()
+	cfg.Auth.Secret = "secret"
+	cfg.Db.MaxOpenConn = 25
+	cfg.Db.MaxIdleConn = 25
+	cfg.Db.MaxIdleTime = "15m"
+	cfg.Limiter.Enabled = true
+	cfg.Limiter.Rps = 2
+	cfg.Limiter.Burst = 4
 
 	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
-	db, err := openDB(cfg)
+	db, err := OpenDB(cfg)
 	assert.Nil(t, err)
 	defer db.Close()
 
@@ -48,10 +49,10 @@ func TestRoutes(t *testing.T) {
 		"version integer NOT NULL DEFAULT 1);")
 	assert.Nil(t, err)
 
-	app := &application{
-		config: cfg,
-		logger: logger,
-		models: data.InitModels(db),
+	app := &Application{
+		Config: cfg,
+		Logger: logger,
+		Models: data.InitModels(db),
 	}
 
 	ts := httptest.NewTLSServer(app.routes())

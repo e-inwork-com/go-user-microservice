@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"user.services.e-inwork.com/internal/validator"
+	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"

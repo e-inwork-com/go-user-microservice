@@ -1,14 +1,14 @@
-package main
+package api
 
 import (
 	"errors"
 	"net/http"
 
-	"user.services.e-inwork.com/internal/data"
-	"user.services.e-inwork.com/internal/validator"
+	"github.com/e-inwork-com/golang-user-microservice/internal/data"
+	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
 )
 
-func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
+func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Name     string `json:"name"`
 		Email    string `json:"email"`
@@ -40,7 +40,7 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	err = app.models.Users.Insert(user)
+	err = app.Models.Users.Insert(user)
 	if err != nil {
 		switch {
 		case errors.Is(err, data.ErrDuplicateEmail):

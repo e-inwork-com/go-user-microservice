@@ -15,7 +15,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app with name 'user' as the executable file
-RUN go build -o user ./cmd/api
+RUN go build -o user ./cmd
 
 # Expose port 4000 to the outside world
 EXPOSE 4000
