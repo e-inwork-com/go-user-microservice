@@ -2,9 +2,8 @@ package api
 
 import (
 	"context"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
-
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 )
 
 type contextKey string

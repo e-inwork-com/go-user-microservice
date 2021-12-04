@@ -4,6 +4,7 @@ import (
 	"errors"
 	"expvar"
 	"fmt"
+	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
 	"strconv"
 	"strings"
@@ -144,7 +145,7 @@ func (app *Application) authenticate(next http.Handler) http.Handler {
 		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
-			r = app.contextSetUser(r, data.AnonymousUser)
+			r = app.contextSetUser(r, data2.AnonymousUser)
 			next.ServeHTTP(w, r)
 			return
 		}

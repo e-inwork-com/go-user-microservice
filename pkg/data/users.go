@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"time"
 
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
@@ -22,9 +23,9 @@ type User struct {
 	ID        uuid.UUID	`json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Password  password  `json:"-"`
-	Activated bool      `json:"activated"`
+	Email     string   `json:"email"`
+	Password  password `json:"-"`
+	Activated bool     `json:"activated"`
 	Version   int       `json:"-"`
 }
 
@@ -141,7 +142,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrRecordNotFound
+			return nil, data.ErrRecordNotFound
 		default:
 			return nil, err
 		}
@@ -174,7 +175,7 @@ func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrRecordNotFound
+			return nil, data.ErrRecordNotFound
 		default:
 			return nil, err
 		}
@@ -208,7 +209,7 @@ func (m UserModel) Update(user *User) error {
 		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
 			return ErrDuplicateEmail
 		case errors.Is(err, sql.ErrNoRows):
-			return ErrEditConflict
+			return data.ErrEditConflict
 		default:
 			return err
 		}

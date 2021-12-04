@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -68,7 +69,7 @@ func TestRoutes(t *testing.T) {
 	body, err := ioutil.ReadAll(res.Body)
 	assert.Nil(t, err)
 
-	var userResult map[string]data.User
+	var userResult map[string]data2.User
 	err = json.Unmarshal(body, &userResult)
 	assert.Nil(t, err)
 	assert.Equal(t, userResult["user"].Email, "test@example.com")

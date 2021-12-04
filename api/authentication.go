@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"github.com/google/uuid"
 	"net/http"
 	"time"
@@ -31,8 +32,8 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 
 	v := validator.New()
 
-	data.ValidateEmail(v, input.Email)
-	data.ValidatePasswordPlaintext(v, input.Password)
+	data2.ValidateEmail(v, input.Email)
+	data2.ValidatePasswordPlaintext(v, input.Password)
 
 	if !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)

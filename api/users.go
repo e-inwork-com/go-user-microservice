@@ -2,9 +2,9 @@ package api
 
 import (
 	"errors"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
 )
 
