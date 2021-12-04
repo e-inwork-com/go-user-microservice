@@ -1,24 +1,25 @@
-# Start from golang:1.17-alpine base image
+# Get Golang 1.17
 FROM golang:1.17-alpine
 
-# Set the Current Working Directory inside the container
+# Set working directru
 WORKDIR /app
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./
 
 # Download all dependancies.
-# Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN go mod download
 
-# Copy the source from the current directory to the Working Directory inside the container
+# Copy the source from the current directory
+# to the Working Directory inside the container
 COPY . .
 
-# Build the Go app with name 'user' as the executable file
+# Build the Go app with name 'profile'
+# as the executable file
 RUN go build -o user ./cmd
 
-# Expose port 4000 to the outside world
+# Expose 4000
 EXPOSE 4000
 
-# Run the executable file
+# Run Application
 CMD ["./user"]
