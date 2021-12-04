@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"time"
 
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
@@ -142,7 +141,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, data.ErrRecordNotFound
+			return nil, ErrRecordNotFound
 		default:
 			return nil, err
 		}
@@ -175,7 +174,7 @@ func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, data.ErrRecordNotFound
+			return nil, ErrRecordNotFound
 		default:
 			return nil, err
 		}
@@ -209,7 +208,7 @@ func (m UserModel) Update(user *User) error {
 		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
 			return ErrDuplicateEmail
 		case errors.Is(err, sql.ErrNoRows):
-			return data.ErrEditConflict
+			return ErrEditConflict
 		default:
 			return err
 		}

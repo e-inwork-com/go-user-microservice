@@ -4,13 +4,13 @@ import (
 	"expvar"
 	"flag"
 	"fmt"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"os"
 	"runtime"
 	"strings"
 	"time"
 
 	"github.com/e-inwork-com/golang-user-microservice/api"
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"github.com/e-inwork-com/golang-user-microservice/internal/jsonlog"
 )
 

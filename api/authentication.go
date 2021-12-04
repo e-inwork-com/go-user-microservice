@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -43,7 +42,7 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	user, err := app.Models.Users.GetByEmail(input.Email)
 	if err != nil {
 		switch {
-		case errors.Is(err, data.ErrRecordNotFound):
+		case errors.Is(err, data2.ErrRecordNotFound):
 			app.invalidCredentialsResponse(w, r)
 		default:
 			app.serverErrorResponse(w, r, err)

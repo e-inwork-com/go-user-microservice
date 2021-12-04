@@ -10,7 +10,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"github.com/e-inwork-com/golang-user-microservice/internal/jsonlog"
 
 	"github.com/cockroachdb/cockroach-go/v2/testserver"
@@ -53,7 +52,7 @@ func TestRoutes(t *testing.T) {
 	app := &Application{
 		Config: cfg,
 		Logger: logger,
-		Models: data.InitModels(db),
+		Models: data2.InitModels(db),
 	}
 
 	ts := httptest.NewTLSServer(app.routes())

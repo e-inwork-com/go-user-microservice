@@ -11,8 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
-
 	"github.com/felixge/httpsnoop"
 	"github.com/golang-jwt/jwt"
 	"github.com/tomasen/realip"
@@ -180,7 +178,7 @@ func (app *Application) authenticate(next http.Handler) http.Handler {
 		user, err := app.Models.Users.GetByID(claims.ID)
 		if err != nil {
 			switch {
-			case errors.Is(err, data.ErrRecordNotFound):
+			case errors.Is(err, data2.ErrRecordNotFound):
 				app.invalidAuthenticationTokenResponse(w, r)
 			default:
 				app.serverErrorResponse(w, r, err)

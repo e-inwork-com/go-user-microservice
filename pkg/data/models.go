@@ -3,7 +3,6 @@ package data
 import (
 	"database/sql"
 	"errors"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 )
 
 var (
@@ -12,11 +11,11 @@ var (
 )
 
 type Models struct {
-	Users data.UserModel
+	Users UserModel
 }
 
 func InitModels(db *sql.DB) Models {
 	return Models{
-		Users: data.UserModel{DB: db},
+		Users: UserModel{DB: db},
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,7 +13,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/data"
 	"github.com/e-inwork-com/golang-user-microservice/internal/jsonlog"
 
 	_ "github.com/lib/pq"
