@@ -18,7 +18,7 @@ func main() {
 	// Set Configuration
 	var cfg api.Config
 
-	// Read environment variables from command or OS
+	// Read environment  from a command line and OS
 	flag.IntVar(&cfg.Port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.Env, "env", "development", "Environment (development|staging|production)")
 	flag.StringVar(&cfg.Db.Dsn, "db-dsn", os.Getenv("DBDSN"), "Database DSN")
