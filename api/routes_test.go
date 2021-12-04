@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/e-inwork-com/golang-user-microservice/internal/jsonlog"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 
 	"github.com/cockroachdb/cockroach-go/v2/testserver"
 	"github.com/stretchr/testify/assert"
@@ -52,7 +52,7 @@ func TestRoutes(t *testing.T) {
 	app := &Application{
 		Config: cfg,
 		Logger: logger,
-		Models: data2.InitModels(db),
+		Models: data.InitModels(db),
 	}
 
 	ts := httptest.NewTLSServer(app.routes())
@@ -68,7 +68,7 @@ func TestRoutes(t *testing.T) {
 	body, err := ioutil.ReadAll(res.Body)
 	assert.Nil(t, err)
 
-	var userResult map[string]data2.User
+	var userResult map[string]data.User
 	err = json.Unmarshal(body, &userResult)
 	assert.Nil(t, err)
 	assert.Equal(t, userResult["user"].Email, "test@example.com")

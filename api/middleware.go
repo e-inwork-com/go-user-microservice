@@ -4,12 +4,13 @@ import (
 	"errors"
 	"expvar"
 	"fmt"
-	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 
 	"github.com/felixge/httpsnoop"
 	"github.com/golang-jwt/jwt"
@@ -143,7 +144,7 @@ func (app *Application) authenticate(next http.Handler) http.Handler {
 		authorizationHeader := r.Header.Get("Authorization")
 
 		if authorizationHeader == "" {
-			r = app.contextSetUser(r, data2.AnonymousUser)
+			r = app.contextSetUser(r, data.AnonymousUser)
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -178,7 +179,7 @@ func (app *Application) authenticate(next http.Handler) http.Handler {
 		user, err := app.Models.Users.GetByID(claims.ID)
 		if err != nil {
 			switch {
-			case errors.Is(err, data2.ErrRecordNotFound):
+			case errors.Is(err, data.ErrRecordNotFound):
 				app.invalidAuthenticationTokenResponse(w, r)
 			default:
 				app.serverErrorResponse(w, r, err)

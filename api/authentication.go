@@ -2,12 +2,12 @@ package api
 
 import (
 	"errors"
-	data2 "github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"github.com/google/uuid"
 	"net/http"
 	"time"
 
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -31,8 +31,8 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 
 	v := validator.New()
 
-	data2.ValidateEmail(v, input.Email)
-	data2.ValidatePasswordPlaintext(v, input.Password)
+	data.ValidateEmail(v, input.Email)
+	data.ValidatePasswordPlaintext(v, input.Password)
 
 	if !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
@@ -42,7 +42,7 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	user, err := app.Models.Users.GetByEmail(input.Email)
 	if err != nil {
 		switch {
-		case errors.Is(err, data2.ErrRecordNotFound):
+		case errors.Is(err, data.ErrRecordNotFound):
 			app.invalidCredentialsResponse(w, r)
 		default:
 			app.serverErrorResponse(w, r, err)
