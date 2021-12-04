@@ -33,10 +33,10 @@ func main() {
 		cfg.Cors.TrustedOrigins = strings.Fields(val)
 		return nil
 	})
-
 	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
 
+	// Show version on the terminal
 	if *displayVersion {
 		fmt.Printf("Version:\t%s\n", api.Version)
 		fmt.Printf("Build time:\t%s\n", api.BuildTime)
