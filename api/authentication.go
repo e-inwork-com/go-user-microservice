@@ -70,7 +70,7 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	// Set Signing Key from the Config Environment
 	signingKey := []byte(app.Config.Auth.Secret)
 
-	// Set an expired time for a weeks
+	// Set an expired time for a week
 	expirationTime := time.Now().Add((24 * 7) * time.Hour)
 
 	// Set the ID of the user in the Claim token
