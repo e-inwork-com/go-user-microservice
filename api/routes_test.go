@@ -55,7 +55,7 @@ func TestRoutes(t *testing.T) {
 		Models: data.InitModels(db),
 	}
 
-	ts := httptest.NewTLSServer(app.routes())
+	ts := httptest.NewTLSServer(app.Routes())
 	defer ts.Close()
 
 	// Register
