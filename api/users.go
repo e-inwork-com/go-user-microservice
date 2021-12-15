@@ -2,10 +2,10 @@ package api
 
 import (
 	"errors"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 	"net/http"
 
 	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
+	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
 )
 
 func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
