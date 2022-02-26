@@ -29,12 +29,11 @@ func main() {
 	flag.BoolVar(&cfg.Limiter.Enabled, "limiter-enabled", true, "Enable rate limiter")
 	flag.Float64Var(&cfg.Limiter.Rps, "limiter-rps", 2, "Rate limiter maximum requests per second")
 	flag.IntVar(&cfg.Limiter.Burst, "limiter-burst", 4, "Rate limiter maximum burst")
-	flag.Func("cors-trusted-origins", "Trusted CORS origins (space separated)", func(val string) error {
-		cfg.Cors.TrustedOrigins = strings.Fields(val)
-		return nil
-	})
 	displayVersion := flag.Bool("version", false, "Display version and exit")
 	flag.Parse()
+
+	// Set CORS Trusted Origins
+	cfg.Cors.TrustedOrigins = strings.Fields(os.Getenv("CORS-TRUSTED-ORIGINS"))
 
 	// Show version on the terminal
 	if *displayVersion {

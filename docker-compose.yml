@@ -15,6 +15,7 @@ services:
       - "seccomp:unconfined"
     environment:
       - DBDSN=${DBDSN:-postgres://root@dbhost:26257/einwork?sslmode=disable}
+      - CORS-TRUSTED-ORIGINS=http://localhost:3000
     deploy:
       restart_policy:
         condition: on-failure
