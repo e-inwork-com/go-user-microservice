@@ -192,3 +192,19 @@ func (app *Application) authenticate(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+// requireAuthenticated Function to check if the user has an authentication
+func (app *Application) requireAuthenticated(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user := app.contextGetUser(r)
+
+		// If the user doesn't have an authentication then send an error
+		if user.IsAnonymous() {
+			app.authenticationRequiredResponse(w, r)
+			return
+		}
+
+		// Run the next function
+		next.ServeHTTP(w, r)
+	})
+}

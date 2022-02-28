@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -42,7 +43,6 @@ func TestRoutes(t *testing.T) {
 		"CREATE TABLE IF NOT EXISTS users (" +
 		"id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid()," +
 		"created_at timestamp(0) with time zone NOT NULL DEFAULT NOW()," +
-		"name text NOT NULL," +
 		"email text UNIQUE NOT NULL," +
 		"password_hash bytea NOT NULL," +
 		"activated bool NOT NULL DEFAULT false," +
@@ -59,7 +59,7 @@ func TestRoutes(t *testing.T) {
 	defer ts.Close()
 
 	// Register
-	user := `{"name": "Test", "email": "test@example.com", "password": "pa55word"}`
+	user := `{"email": "test@example.com", "password": "pa55word"}`
 	res, err := ts.Client().Post(ts.URL+"/api/users", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
 	assert.Equal(t, res.StatusCode, http.StatusAccepted)
@@ -73,7 +73,7 @@ func TestRoutes(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, userResult["user"].Email, "test@example.com")
 
-	// User Token Authentication Sign In
+	// Sign in
 	user = `{"email": "test@example.com", "password": "pa55word"}`
 	res, err = ts.Client().Post(ts.URL+"/api/authentication", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
@@ -83,10 +83,59 @@ func TestRoutes(t *testing.T) {
 	body, err = ioutil.ReadAll(res.Body)
 	assert.Nil(t, err)
 
-	type authType struct{
+	type authType struct {
 		Token string `json:"token"`
 	}
 	var authResult authType
+	err = json.Unmarshal(body, &authResult)
+	assert.Nil(t, err)
+	assert.NotNil(t, authResult.Token)
+
+	// Get a User with the Authorization token
+	req, _ := http.NewRequest("GET", ts.URL+"/api/user", nil)
+
+	bearer := fmt.Sprintf("Bearer %v", authResult.Token)
+	req.Header.Set("Authorization", bearer)
+
+	res, err = ts.Client().Do(req)
+	assert.Nil(t, err)
+	assert.Equal(t, res.StatusCode, http.StatusOK)
+
+	defer res.Body.Close()
+	body, err = ioutil.ReadAll(res.Body)
+	assert.Nil(t, err)
+
+	var mUser map[string]data.User
+	err = json.Unmarshal(body, &mUser)
+	assert.Nil(t, err)
+	assert.Equal(t, mUser["user"].Email, "test@example.com")
+
+	// Patch User with the Authorization token
+	email := "test@email.com"
+	password := "password"
+	user = fmt.Sprintf(`{"email": "%v", "password": "%v"}`, email, password)
+	req, _ = http.NewRequest("PATCH", ts.URL+"/api/users/"+mUser["user"].ID.String(), bytes.NewReader([]byte(user)))
+
+	bearer = fmt.Sprintf("Bearer %v", authResult.Token)
+	req.Header.Set("Authorization", bearer)
+
+	res, err = ts.Client().Do(req)
+	assert.Nil(t, err)
+	assert.Equal(t, res.StatusCode, http.StatusOK)
+
+	defer res.Body.Close()
+	body, err = ioutil.ReadAll(res.Body)
+	assert.Nil(t, err)
+
+	err = json.Unmarshal(body, &mUser)
+	assert.Nil(t, err)
+	assert.Equal(t, mUser["user"].Email, email)
+
+	// Sign in again with a new email and a new password
+	res, err = ts.Client().Post(ts.URL+"/api/authentication", "application/json", bytes.NewReader([]byte(user)))
+	assert.Nil(t, err)
+	assert.Equal(t, res.StatusCode, http.StatusCreated)
+
 	err = json.Unmarshal(body, &authResult)
 	assert.Nil(t, err)
 	assert.NotNil(t, authResult.Token)
