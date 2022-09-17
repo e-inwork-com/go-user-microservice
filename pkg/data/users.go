@@ -23,6 +23,8 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
 	Activated bool      `json:"activated"`
 	Version   int       `json:"-"`
 }
@@ -73,8 +75,18 @@ func ValidatePasswordPlaintext(v *validator.Validator, password string) {
 	v.Check(len(password) <= 72, "password", "must not be more than 72 bytes long")
 }
 
+func ValidateFirstName(v *validator.Validator, firstName string) {
+	v.Check(firstName != "", "first_name", "must be provided")
+}
+
+func ValidateLastName(v *validator.Validator, lastName string) {
+	v.Check(lastName != "", "last_name", "must be provided")
+}
+
 func ValidateUser(v *validator.Validator, user *User) {
 	ValidateEmail(v, user.Email)
+	ValidateFirstName(v, user.FirstName)
+	ValidateLastName(v, user.LastName)
 
 	if user.Password.plaintext != nil {
 		ValidatePasswordPlaintext(v, *user.Password.plaintext)
@@ -91,11 +103,11 @@ type UserModel struct {
 
 func (m UserModel) Insert(user *User) error {
 	query := `
-        INSERT INTO users (email, password_hash, activated) 
-        VALUES ($1, $2, $3)
+        INSERT INTO users (email, password_hash, first_name, last_name, activated) 
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id, created_at, version`
 
-	args := []interface{}{user.Email, user.Password.hash, user.Activated}
+	args := []interface{}{user.Email, user.Password.hash, user.FirstName, user.LastName, user.Activated}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -147,7 +159,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 
 func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 	query := `
-        SELECT id, created_at, email, password_hash, activated, version
+        SELECT id, created_at, email, password_hash, first_name, last_name, activated, version
         FROM users
         WHERE id = $1`
 
@@ -161,6 +173,8 @@ func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 		&user.CreatedAt,
 		&user.Email,
 		&user.Password.hash,
+		&user.FirstName,
+		&user.LastName,
 		&user.Activated,
 		&user.Version,
 	)

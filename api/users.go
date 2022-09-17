@@ -10,8 +10,10 @@ import (
 
 func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Email    	string `json:"email"`
+		Password 	string `json:"password"`
+		FirstName 	string `json:"first_name"`
+		LastName 	string `json:"last_name"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -21,8 +23,10 @@ func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	user := &data.User{
-		Email:     input.Email,
-		Activated: true,
+		Email:    	input.Email,
+		FirstName: 	input.FirstName,
+		LastName:  	input.LastName,
+		Activated: 	true,
 	}
 
 	err = user.Password.Set(input.Password)
@@ -115,8 +119,10 @@ func (app *Application) patchUserHandler(w http.ResponseWriter, r *http.Request)
 
 	// User input
 	var input struct {
-		Email    *string `json:"email"`
-		Password *string `json:"password"`
+		Email    	*string `json:"email"`
+		Password 	*string `json:"password"`
+		FirstName 	*string `json:"first_name"`
+		LastName 	*string `json:"last_name"`
 	}
 
 	// Read JSON from input
@@ -126,7 +132,7 @@ func (app *Application) patchUserHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Assign input FirstName if exist
+	// Assign input email if exist
 	if input.Email != nil {
 		user.Email = *input.Email
 	}
@@ -138,6 +144,16 @@ func (app *Application) patchUserHandler(w http.ResponseWriter, r *http.Request)
 			app.serverErrorResponse(w, r, err)
 			return
 		}
+	}
+
+	// Assign input FirstName if exist
+	if input.FirstName != nil {
+		user.FirstName = *input.FirstName
+	}
+
+	// Assign input LastName if exist
+	if input.LastName != nil {
+		user.LastName = *input.LastName
 	}
 
 	// Create a Validator

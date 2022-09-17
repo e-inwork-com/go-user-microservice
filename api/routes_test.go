@@ -45,6 +45,8 @@ func TestRoutes(t *testing.T) {
 		"created_at timestamp(0) with time zone NOT NULL DEFAULT NOW()," +
 		"email text UNIQUE NOT NULL," +
 		"password_hash bytea NOT NULL," +
+		"first_name char varying(100) NOT NULL," +
+		"last_name char varying(100) NOT NULL," +
 		"activated bool NOT NULL DEFAULT false," +
 		"version integer NOT NULL DEFAULT 1);")
 	assert.Nil(t, err)
@@ -59,7 +61,7 @@ func TestRoutes(t *testing.T) {
 	defer ts.Close()
 
 	// Register
-	user := `{"email": "test@example.com", "password": "pa55word"}`
+	user := `{"email": "test@example.com", "password": "pa55word", "first_name": "Jon", "last_name": "Doe"}`
 	res, err := ts.Client().Post(ts.URL+"/api/users", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
 	assert.Equal(t, res.StatusCode, http.StatusAccepted)
