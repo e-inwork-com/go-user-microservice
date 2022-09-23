@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
+	"github.com/e-inwork-com/go-user-service/internal/validator"
+	"github.com/e-inwork-com/go-user-service/pkg/data"
 )
 
 func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Request) {

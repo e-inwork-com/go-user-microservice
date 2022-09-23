@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/e-inwork-com/golang-user-microservice/internal/validator"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
+	"github.com/e-inwork-com/go-user-service/internal/validator"
+	"github.com/e-inwork-com/go-user-service/pkg/data"
 
 	"github.com/golang-jwt/jwt/v4"
 )

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/e-inwork-com/golang-user-microservice/api"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/jsonlog"
+	"github.com/e-inwork-com/go-user-service/api"
+	"github.com/e-inwork-com/go-user-service/pkg/data"
+	"github.com/e-inwork-com/go-user-service/pkg/jsonlog"
 )
 
 func main() {

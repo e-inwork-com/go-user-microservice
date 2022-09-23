@@ -10,8 +10,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/e-inwork-com/golang-user-microservice/pkg/data"
-	"github.com/e-inwork-com/golang-user-microservice/pkg/jsonlog"
+	"github.com/e-inwork-com/go-user-service/pkg/data"
+	"github.com/e-inwork-com/go-user-service/pkg/jsonlog"
 
 	"github.com/cockroachdb/cockroach-go/v2/testserver"
 	"github.com/stretchr/testify/assert"

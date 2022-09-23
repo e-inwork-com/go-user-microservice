@@ -1,4 +1,4 @@
-module github.com/e-inwork-com/golang-user-microservice
+module github.com/e-inwork-com/go-user-service
 
 go 1.17
 
