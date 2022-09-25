@@ -94,7 +94,7 @@ func TestRoutes(t *testing.T) {
 	assert.NotNil(t, authResult.Token)
 
 	// Get a User with the Authorization token
-	req, _ := http.NewRequest("GET", ts.URL+"/api/user", nil)
+	req, _ := http.NewRequest("GET", ts.URL+"/api/users/me", nil)
 
 	bearer := fmt.Sprintf("Bearer %v", authResult.Token)
 	req.Header.Set("Authorization", bearer)
