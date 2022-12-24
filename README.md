@@ -53,7 +53,7 @@
     ```
     curl -d '{"email":"jon@doe.com", "password":"pa55word"}' -H "Content-Type: application/json" -X POST http://localhost:4000/api/authentication
     ```
-12. You will get a token from the response login, and set it as a token varible for example like below:
+12. You will get a token from the response login, and set it as a token variable for example like below:
     ```
     token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhY2NkNTUzLWIwZTgtNDYxNC1iOTY0LTA5MTYyODhkMmExOCIsImV4cCI6MTY3MjUyMTQ1M30.S-G5gGvetOrdQTLOw46SmEv-odQZ5cqqA1KtQm0XaL4
     ```
