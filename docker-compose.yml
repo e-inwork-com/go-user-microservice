@@ -1,39 +1,41 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres
+    hostname: db-service
+    networks:
+      - service-network
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      -  database-data:/var/lib/postgresql/data/
   user:
     depends_on:
       - db
     build:
       context: .
-    hostname: userhost
+    hostname: go-user-service
     networks:
-      - servicenet
+      - service-network
     ports:
       - "4000:4000"
     security_opt:
       - "seccomp:unconfined"
     environment:
-      - DBDSN=${DBDSN:-postgres://root@dbhost:26257/einwork?sslmode=disable}
+      - DBDSN=${DBDSN:-postgres://postgres:postgres@db-service:5432/postgres?sslmode=disable}
       - CORS-TRUSTED-ORIGINS=http://localhost:3000
     deploy:
       restart_policy:
         condition: on-failure
-  db:
-    image: cockroachdb/cockroach:latest-v20.1
-    hostname: dbhost
-    networks:
-      - servicenet
-    ports:
-      - "26257:26257"
-      - "8080:8080"
-    volumes:
-      - dbdata:/cockroach/cockroach-data
-    command: start-single-node --insecure
 
 volumes:
-  dbdata:
+  database-data:
 
 networks:
-  servicenet:
+  service-network:
     driver: bridge
