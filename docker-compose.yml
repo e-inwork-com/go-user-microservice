@@ -5,15 +5,25 @@ services:
     image: postgres
     hostname: db-service
     networks:
-      - service-network
+      - network-services
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       -  database-data:/var/lib/postgresql/data/
+  migrate:
+    depends_on:
+      - db
+    image: migrate/migrate
+    networks:
+      - network-services
+    volumes:
+      - ./migrations:/migrations
+    command: -database postgres://postgres:postgres@db-service:5432/postgres?sslmode=disable -path /migrations up
+    restart: on-failure
   user:
     depends_on:
       - db
@@ -21,7 +31,7 @@ services:
       context: .
     hostname: go-user-service
     networks:
-      - service-network
+      - network-services
     ports:
       - "4000:4000"
     security_opt:
@@ -37,5 +47,5 @@ volumes:
   database-data:
 
 networks:
-  service-network:
+  network-services:
     driver: bridge
