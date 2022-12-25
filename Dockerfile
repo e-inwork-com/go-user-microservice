@@ -1,5 +1,5 @@
-# Get Golang 1.17
-FROM golang:1.17-alpine
+# Get Golang 1.19.4
+FROM golang:1.19.4-bullseye
 
 # Set working directru
 WORKDIR /app
