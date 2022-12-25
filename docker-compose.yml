@@ -13,7 +13,7 @@ services:
     ports:
       - "5432"
     volumes:
-      -  database-data:/var/lib/postgresql/data/
+      - database-data:/var/lib/postgresql/data/
   migrate:
     depends_on:
       - db
