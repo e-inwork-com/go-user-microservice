@@ -116,7 +116,7 @@ func TestRoutes(t *testing.T) {
 
 	// Register
 	user := `{"email": "test@example.com", "password": "pa55word", "first_name": "Jon", "last_name": "Doe"}`
-	res, err := ts.Client().Post(ts.URL+"/api/users", "application/json", bytes.NewReader([]byte(user)))
+	res, err := ts.Client().Post(ts.URL+"/service/users", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
 	assert.Equal(t, res.StatusCode, http.StatusAccepted)
 
@@ -131,7 +131,7 @@ func TestRoutes(t *testing.T) {
 
 	// Sign in
 	user = `{"email": "test@example.com", "password": "pa55word"}`
-	res, err = ts.Client().Post(ts.URL+"/api/authentication", "application/json", bytes.NewReader([]byte(user)))
+	res, err = ts.Client().Post(ts.URL+"/service/users/authentication", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
 	assert.Equal(t, res.StatusCode, http.StatusCreated)
 
@@ -148,7 +148,7 @@ func TestRoutes(t *testing.T) {
 	assert.NotNil(t, authResult.Token)
 
 	// Get a User with the Authorization token
-	req, _ := http.NewRequest("GET", ts.URL+"/api/users/me", nil)
+	req, _ := http.NewRequest("GET", ts.URL+"/service/users/me", nil)
 
 	bearer := fmt.Sprintf("Bearer %v", authResult.Token)
 	req.Header.Set("Authorization", bearer)
@@ -170,7 +170,7 @@ func TestRoutes(t *testing.T) {
 	email := "test@email.com"
 	password := "password"
 	user = fmt.Sprintf(`{"email": "%v", "password": "%v"}`, email, password)
-	req, _ = http.NewRequest("PATCH", ts.URL+"/api/users/"+mUser["user"].ID.String(), bytes.NewReader([]byte(user)))
+	req, _ = http.NewRequest("PATCH", ts.URL+"/service/users/"+mUser["user"].ID.String(), bytes.NewReader([]byte(user)))
 
 	bearer = fmt.Sprintf("Bearer %v", authResult.Token)
 	req.Header.Set("Authorization", bearer)
@@ -188,7 +188,7 @@ func TestRoutes(t *testing.T) {
 	assert.Equal(t, mUser["user"].Email, email)
 
 	// Sign in again with a new email and a new password
-	res, err = ts.Client().Post(ts.URL+"/api/authentication", "application/json", bytes.NewReader([]byte(user)))
+	res, err = ts.Client().Post(ts.URL+"/service/users/authentication", "application/json", bytes.NewReader([]byte(user)))
 	assert.Nil(t, err)
 	assert.Equal(t, res.StatusCode, http.StatusCreated)
 
