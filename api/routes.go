@@ -19,7 +19,7 @@ func (app *Application) Routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/service/users/me", app.requireAuthenticated(app.getUserHandler))
 	router.HandlerFunc(http.MethodPatch, "/service/users/:id", app.requireAuthenticated(app.patchUserHandler))
 
-	router.Handler(http.MethodGet, "/debug/vars", expvar.Handler())
+	router.Handler(http.MethodGet, "/service/users/debug/vars", expvar.Handler())
 
 	return app.metrics(app.recoverPanic(app.enableCORS(app.rateLimit(app.authenticate(router)))))
 }
