@@ -18,6 +18,13 @@ var (
 
 var AnonymousUser = &User{}
 
+type UserModelInterface interface {
+	Insert(user *User) error
+	GetByID(id uuid.UUID) (*User, error)
+	GetByEmail(email string) (*User, error)
+	Update(user *User) error
+}
+
 type User struct {
 	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -103,7 +110,7 @@ type UserModel struct {
 
 func (m UserModel) Insert(user *User) error {
 	query := `
-        INSERT INTO users (email, password_hash, first_name, last_name, activated) 
+        INSERT INTO users (email, password_hash, first_name, last_name, activated)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING id, created_at, version`
 
@@ -193,7 +200,7 @@ func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 
 func (m UserModel) Update(user *User) error {
 	query := `
-        UPDATE users 
+        UPDATE users
         SET email = $1, password_hash = $2, activated = $3, version = version + 1
         WHERE id = $4 AND version = $5
         RETURNING version`
