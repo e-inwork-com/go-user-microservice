@@ -1,51 +1,64 @@
-version: '3.8'
+version: '3'
 
 services:
-  db:
+  db-local:
     image: postgres
     hostname: db-service
     networks:
-      - network-services
+      - network-local
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432"
+      - "5432:5432"
     volumes:
-      - database-data:/var/lib/postgresql/data/
-  migrate:
+      - ./local/local/progresql-data:/var/lib/postgresql/data/
+
+  migrate-local:
     depends_on:
-      - db
+      - db-local
     image: migrate/migrate
     networks:
-      - network-services
+      - network-local
     volumes:
       - ./migrations:/migrations
     command: -database postgres://postgres:postgres@db-service:5432/postgres?sslmode=disable -path /migrations up
     restart: on-failure
-  user:
+
+  user-local:
     depends_on:
-      - db
+      - db-local
+      - migrate-local
     build:
       context: .
+      dockerfile: Dockerfile.local
     hostname: go-user-service
     networks:
-      - network-services
+      - network-local
     ports:
-      - "4000:4000"
+      - "4000"
     security_opt:
       - "seccomp:unconfined"
     environment:
       - DBDSN=${DBDSN:-postgres://postgres:postgres@db-service:5432/postgres?sslmode=disable}
-      - CORS-TRUSTED-ORIGINS=http://localhost:3000
+      - AUTHSECRET=${AUTHSECRET:-secret}
     deploy:
       restart_policy:
         condition: on-failure
 
-volumes:
-  database-data:
+  front-envoy-local:
+    depends_on:
+      - user-local
+    build:
+      context: .
+      dockerfile: Dockerfile.local.frontenvoy
+    networks:
+      - network-local
+    ports:
+      - "${PORT_PROXY:-8000}:8000"
+      - "${PORT_STATS:-8001}:8001"
 
 networks:
-  network-services:
+  network-local:
     driver: bridge

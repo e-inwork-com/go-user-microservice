@@ -12,8 +12,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/e-inwork-com/go-user-service/pkg/data"
-	"github.com/e-inwork-com/go-user-service/pkg/jsonlog"
+	"github.com/e-inwork-com/go-user-service/internal/data"
+	"github.com/e-inwork-com/go-user-service/internal/jsonlog"
 
 	_ "github.com/lib/pq"
 )
@@ -40,8 +40,8 @@ type Config struct {
 
 	Limiter struct {
 		Enabled bool
-		Rps   float64
-		Burst int
+		Rps     float64
+		Burst   int
 	}
 
 	Cors struct {

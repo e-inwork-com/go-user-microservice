@@ -11,7 +11,7 @@ var (
 )
 
 type Models struct {
-	Users UserModel
+	Users UserModelInterface
 }
 
 func InitModels(db *sql.DB) Models {
