@@ -18,8 +18,8 @@ COPY . .
 # as the executable file
 RUN go build -o user ./cmd
 
-# Expose 4000
-EXPOSE 4000
+# Expose 4001
+EXPOSE 4001
 
 # Run Application
 CMD ["./user"]
