@@ -108,21 +108,21 @@ func (app *Application) testSecondToken(t *testing.T) string {
 }
 
 func (app *Application) testBodyCreateUser(t *testing.T) io.Reader {
-	user := `{"email": "jon@doe.com", "password": "pa55word", "first_name": "Jon", "last_name": "Doe"}`
+	user := `{"email_t": "jon@doe.com", "password": "pa55word", "first_name_t": "Jon", "last_name_t": "Doe"}`
 	return bytes.NewReader([]byte(user))
 }
 
 func (app *Application) testBodyLoginUser(t *testing.T) io.Reader {
-	user := `{"email": "jon@doe.com", "password": "pa55word"}`
+	user := `{"email_t": "jon@doe.com", "password": "pa55word"}`
 	return bytes.NewReader([]byte(user))
 }
 
 func (app *Application) testBodyUpdateUser(t *testing.T) io.Reader {
-	user := `{"password": "pa00word", "first_name": "Nina"}`
+	user := `{"password": "pa00word", "first_name_t": "Nina"}`
 	return bytes.NewReader([]byte(user))
 }
 
 func (app *Application) testBodyUpdateUserFobidden(t *testing.T) io.Reader {
-	user := `{"password": "pa11w0rd", "email": "lee@john.com"}`
+	user := `{"password": "pa11w0rd", "email_t": "lee@john.com"}`
 	return bytes.NewReader([]byte(user))
 }

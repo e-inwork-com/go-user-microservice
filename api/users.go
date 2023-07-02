@@ -19,10 +19,10 @@ type Claims struct {
 
 func (app *Application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		Email     string `json:"email"`
+		Email     string `json:"email_t"`
 		Password  string `json:"password"`
-		FirstName string `json:"first_name"`
-		LastName  string `json:"last_name"`
+		FirstName string `json:"first_name_t"`
+		LastName  string `json:"last_name_t"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -128,10 +128,10 @@ func (app *Application) patchUserHandler(w http.ResponseWriter, r *http.Request)
 
 	// User input
 	var input struct {
-		Email     *string `json:"email"`
+		Email     *string `json:"email_t"`
 		Password  *string `json:"password"`
-		FirstName *string `json:"first_name"`
-		LastName  *string `json:"last_name"`
+		FirstName *string `json:"first_name_t"`
+		LastName  *string `json:"last_name_t"`
 	}
 
 	// Read JSON from input
@@ -198,7 +198,7 @@ func (app *Application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	// Sign  in with email & password
 	// to request a token for the current user
 	var input struct {
-		Email    string `json:"email"`
+		Email    string `json:"email_t"`
 		Password string `json:"password"`
 	}
 

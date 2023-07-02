@@ -27,12 +27,12 @@ type UserModelInterface interface {
 
 type User struct {
 	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at_dt"`
+	Email     string    `json:"email_t"`
 	Password  password  `json:"-"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Activated bool      `json:"activated"`
+	FirstName string    `json:"first_name_t"`
+	LastName  string    `json:"last_name_t"`
+	Activated bool      `json:"activated_b"`
 	Version   int       `json:"-"`
 }
 
@@ -72,7 +72,7 @@ func (p *password) Matches(plaintextPassword string) (bool, error) {
 }
 
 func ValidateEmail(v *validator.Validator, email string) {
-	v.Check(email != "", "email", "must be provided")
+	v.Check(email != "", "email_t", "must be provided")
 	v.Check(validator.Matches(email, validator.EmailRX), "email", "must be a valid email address")
 }
 
@@ -83,11 +83,11 @@ func ValidatePasswordPlaintext(v *validator.Validator, password string) {
 }
 
 func ValidateFirstName(v *validator.Validator, firstName string) {
-	v.Check(firstName != "", "first_name", "must be provided")
+	v.Check(firstName != "", "first_name_t", "must be provided")
 }
 
 func ValidateLastName(v *validator.Validator, lastName string) {
-	v.Check(lastName != "", "last_name", "must be provided")
+	v.Check(lastName != "", "last_name_t", "must be provided")
 }
 
 func ValidateUser(v *validator.Validator, user *User) {
@@ -110,9 +110,9 @@ type UserModel struct {
 
 func (m UserModel) Insert(user *User) error {
 	query := `
-        INSERT INTO users (email, password_hash, first_name, last_name, activated)
+        INSERT INTO users (email_t, password_hash, first_name_t, last_name_t, activated_b)
         VALUES ($1, $2, $3, $4, $5)
-        RETURNING id, created_at, version`
+        RETURNING id, created_at_dt, version`
 
 	args := []interface{}{user.Email, user.Password.hash, user.FirstName, user.LastName, user.Activated}
 
@@ -134,9 +134,9 @@ func (m UserModel) Insert(user *User) error {
 
 func (m UserModel) GetByEmail(email string) (*User, error) {
 	query := `
-        SELECT id, created_at, email, password_hash, activated, version
+        SELECT id, created_at_dt, email_t, password_hash, activated_b, version
         FROM users
-        WHERE email = $1`
+        WHERE email_t = $1`
 
 	var user User
 
@@ -166,7 +166,7 @@ func (m UserModel) GetByEmail(email string) (*User, error) {
 
 func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 	query := `
-        SELECT id, created_at, email, password_hash, first_name, last_name, activated, version
+        SELECT id, created_at_dt, email_t, password_hash, first_name_t, last_name_t, activated_b, version
         FROM users
         WHERE id = $1`
 
@@ -201,12 +201,14 @@ func (m UserModel) GetByID(id uuid.UUID) (*User, error) {
 func (m UserModel) Update(user *User) error {
 	query := `
         UPDATE users
-        SET email = $1, password_hash = $2, activated = $3, version = version + 1
-        WHERE id = $4 AND version = $5
+        SET email_t = $1, first_name_t = $2, last_name_t = $3,  password_hash = $4, activated_b = $5, version = version + 1
+        WHERE id = $6 AND version = $7
         RETURNING version`
 
 	args := []interface{}{
 		user.Email,
+		user.FirstName,
+		user.LastName,
 		user.Password.hash,
 		user.Activated,
 		user.ID,

@@ -69,7 +69,7 @@ func TestE2E(t *testing.T) {
 
 	t.Run("Register User", func(t *testing.T) {
 		data := fmt.Sprintf(
-			`{"email": "%v", "password": "%v", "first_name": "Jon", "last_name": "Doe"}`,
+			`{"email_t": "%v", "password": "%v", "first_name_t": "Jon", "last_name_t": "Doe"}`,
 			email,
 			password)
 		req, _ := http.NewRequest(
@@ -99,7 +99,7 @@ func TestE2E(t *testing.T) {
 
 	t.Run("Login User", func(t *testing.T) {
 		data := fmt.Sprintf(
-			`{"email": "%v", "password": "%v"}`,
+			`{"email_t": "%v", "password": "%v"}`,
 			email,
 			password)
 		req, _ := http.NewRequest(
@@ -150,7 +150,7 @@ func TestE2E(t *testing.T) {
 
 	t.Run("Patch User with New Email & Password", func(t *testing.T) {
 		data := fmt.Sprintf(
-			`{"email": "%v", "password": "%v"}`,
+			`{"email_t": "%v", "password": "%v"}`,
 			newEmail,
 			newPassword)
 		req, _ := http.NewRequest(
@@ -177,7 +177,7 @@ func TestE2E(t *testing.T) {
 
 	t.Run("Login User with New Email & Password", func(t *testing.T) {
 		data := fmt.Sprintf(
-			`{"email": "%v", "password": "%v"}`,
+			`{"email_t": "%v", "password": "%v"}`,
 			newEmail,
 			newPassword)
 		req, _ := http.NewRequest(
