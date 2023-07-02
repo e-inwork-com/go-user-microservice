@@ -10,8 +10,6 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
     volumes:
       - ./local/local/progresql-data:/var/lib/postgresql/data/
 
@@ -30,14 +28,12 @@ services:
     depends_on:
       - db-local
       - migrate-local
-    build:
-      context: .
-      dockerfile: Dockerfile.local
+    build: .
     hostname: go-user-service
     networks:
       - network-local
     ports:
-      - "4000"
+      - "4000:4000"
     security_opt:
       - "seccomp:unconfined"
     environment:
@@ -46,18 +42,6 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-
-  front-envoy-local:
-    depends_on:
-      - user-local
-    build:
-      context: .
-      dockerfile: Dockerfile.local.frontenvoy
-    networks:
-      - network-local
-    ports:
-      - "${PORT_PROXY:-8000}:8000"
-      - "${PORT_STATS:-8001}:8001"
 
 networks:
   network-local:
