@@ -33,7 +33,7 @@ services:
     networks:
       - network-local
     ports:
-      - "4000:4000"
+      - "4001:4001"
     security_opt:
       - "seccomp:unconfined"
     environment:
